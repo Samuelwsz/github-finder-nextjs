@@ -1,5 +1,5 @@
+import { UserDataProps } from "@/app/page"
 import Image from "next/image"
-import { UserDataProps } from "./SearchUser"
 
 export default function User({
   avatar_url,
@@ -13,7 +13,7 @@ export default function User({
   const createdDate = new Date(created_at)
 
   return (
-    <div className="">
+    <div>
       <div>
         {avatar_url && (
           <>
@@ -40,10 +40,10 @@ export default function User({
           </>
         )}
       </div>
-      <div className="">
-        <div>{public_repos && <p>Public Repos: {public_repos}</p>}</div>
-        <div>{followers && <p>Followers: {followers}</p>}</div>
-        <div>{following && <p>Following: {following}</p>}</div>
+      <div className="text-left">
+        <div>{<p>Public Repos: {public_repos}</p>}</div>
+        <div>{<p>Followers: {followers}</p>}</div>
+        <div>{<p>Following: {following}</p>}</div>
       </div>
     </div>
   )
