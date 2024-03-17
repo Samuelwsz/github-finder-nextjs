@@ -13,22 +13,22 @@ export default function User({
   const createdDate = new Date(created_at)
 
   return (
-    <div>
+    <div className="">
       <div>
         {avatar_url && (
           <>
             <Image
               src={avatar_url}
               className="avatar"
-              alt="User"
-              width={500}
-              height={500}
+              alt="ImageUser"
+              width={400}
+              height={400}
             />
           </>
         )}
       </div>
       <div className="">
-        <a href={`https://github.com/${login}`}>{name || login}</a>
+        <a target="_blank" href={`https://github.com/${login}`}>{name || login}</a>
         {created_at && (
           <>
             <p>
@@ -41,9 +41,17 @@ export default function User({
         )}
       </div>
       <div className="text-left">
-        <div>{<p>Public Repos: {public_repos}</p>}</div>
-        <div>{<p>Followers: {followers}</p>}</div>
-        <div>{<p>Following: {following}</p>}</div>
+        <div> {public_repos && <p>Public Repos: {public_repos}</p>}</div>
+        <div>
+          {followers === 0
+            ? "No followers"
+            : followers && <p>Followers: {followers}</p>}
+        </div>
+        <div>
+          {following === 0
+            ? "Don't follow any users"
+            : following && <p> Following: {following}</p>}
+        </div>
       </div>
     </div>
   )

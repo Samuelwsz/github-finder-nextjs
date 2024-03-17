@@ -3,6 +3,7 @@
 import User from "@/components/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import axios from "axios"
 import { useEffect, useState } from "react"
 
 export interface UserDataProps {
@@ -16,24 +17,26 @@ export interface UserDataProps {
 }
 
 export default function SearchUser() {
-  const [userName, setUserName] = useState<string|undefined>(undefined)
+  const [userName, setUserName] = useState<string | undefined>(undefined)
   const [userData, setUserdata] = useState<UserDataProps | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function fetchGithubUserData() {
-    const res = await fetch(`https://api.github.com/users/${userName}`)
+    try {
+      const res = await axios.get(`https://api.github.com/users/${userName}`)
 
-    const data = await res.json()
+      const data = res.data
 
-    if (data) {
-      setUserdata(data)
+      if (data) {
+        setUserdata(data)
+        setUserName("")
+        setError(null)
+      }
+    } catch (error) {
+      setError("User not found. Please try again.")
+      console.error("Failed to fetch data:", error)
       setUserName("")
     }
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch data")
-    }
-    const results = data.results
-    console.log(results)
   }
 
   function handleSubmit() {
@@ -41,7 +44,9 @@ export default function SearchUser() {
   }
 
   useEffect(() => {
-    fetchGithubUserData()
+    if (userName !== undefined && userName !== null) {
+      fetchGithubUserData()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -57,8 +62,9 @@ export default function SearchUser() {
           />
           <Button onClick={handleSubmit}>Search</Button>
         </div>
-        <div className="my-3 flex m-auto justify-center items-center text-center border border-slate-700 p-3">
-          {userData !== null ? (
+        <div className="my-3 flex m-auto justify-center items-center text-center p-3">
+          {error && <p className="text-red-500">{error}</p>}
+          {userData !== null && !error ? (
             <User
               avatar_url={userData.avatar_url}
               name={userData.name}
